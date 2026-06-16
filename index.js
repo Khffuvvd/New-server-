@@ -1,18 +1,19 @@
 const { WebSocketServer } = require('ws');
-const PORT = process.env.PORT || 10000;
-const wss = new WebSocketServer({ port: PORT }, () => {
-console.log(⁠🚀 Signaling server is running on port ${PORT}⁠);
+const port = process.env.PORT || 10000;
+const server = new WebSocketServer({ port: port }, () => {
+    console.log(`📡 Signaling server is running on port ${port}`);
 });
-wss.on('connection', (ws) => {
-console.log('📱 New client connected!');
-ws.on('message', (message) => {
-wss.clients.forEach((client) => {
-if (client !== ws && client.readyState === 1) {
-client.send(message.toString());
-}
-});
-});
-ws.on('close', () => {
-console.log('❌ Client disconnected');
-});
+
+server.on('connection', (ws) => {
+    console.log('📱 New client connected!');
+    ws.on('message', (message) => {
+        server.clients.forEach((client) => {
+            if (client !== ws && client.readyState === 1) {
+                client.send(message.toString());
+            }
+        });
+    });
+    ws.on('close', () => {
+        console.log('❌ Client disconnected');
+    });
 });
